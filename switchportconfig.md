@@ -3,6 +3,38 @@
 
 ## Switch port configuration
 
+### Layer2 (VLAN)
+
+```shell
+ansible-playbook cisco_portconfig_sn.yml -i inventory -e \
+'{
+"config_type":"vlan_configuration",
+"operation":"create",
+"abort_if_int_connected":"true",
+"config":
+         [
+            {"name":"Vlan_100","vlan_id":100}
+         ]
+ }'
+```
+### Layer2 (VLAN) with curl command
+
+```shell
+export var='{"extra_vars" :
+"{
+\"config_type\":\"vlan_configuration\",
+\"operation\":\"create\",
+\"abort_if_int_connected\":\"true\",
+\"config\":[
+{\"name\":\"Vlan_100\",\"vlan_id\":100},
+{\"name\":\"Vlan_200\",\"vlan_id\":200}
+]
+}"
+}'
+echo $var | curl -v -k -u admin:admin -H 'content-type: application/json' -X  POST -d "$(</dev/stdin)" https://172.16.240.138/api/v2/job_templates/474/launch/ 
+```
+
+
 ### Access Mode
 
 
@@ -13,7 +45,7 @@ ansible-playbook cisco_portconfig_sn.yml -i inventory -e \
 "operation":"create",
 "abort_if_int_connected":"true",
 "config":[
-          {"name":"GigabitEthernet1/0/3","access":{"vlan":100},"description":"Configuring via ansible "}
+          {"name":"GigabitEthernet1/0/3","access":{"vlan":200},"description":"Configuring via ansible "}
          ]
 }'
 ```
@@ -96,36 +128,7 @@ echo $var | curl -v -k -u admin:admin -H 'content-type: application/json' -X  PO
 
 
 
-### Layer2 (VLAN)
 
-```shell
-ansible-playbook cisco_portconfig_sn.yml -i inventory -e \
-'{
-"config_type":"vlan_configuration",
-"operation":"create",
-"abort_if_int_connected":"true",
-"config":
-         [
-            {"name":"Vlan_100","vlan_id":100}
-         ]
- }'
-```
-### Layer2 (VLAN) with curl command
-
-```shell
-export var='{"extra_vars" :
-"{
-\"config_type\":\"vlan_configuration\",
-\"operation\":\"create\",
-\"abort_if_int_connected\":\"true\",
-\"config\":[
-{\"name\":\"Vlan_100\",\"vlan_id\":100},
-{\"name\":\"Vlan_200\",\"vlan_id\":200}
-]
-}"
-}'
-echo $var | curl -v -k -u admin:admin -H 'content-type: application/json' -X  POST -d "$(</dev/stdin)" https://172.16.240.138/api/v2/job_templates/474/launch/ 
-```
 
 
 ### Layer 3 (Logical)
